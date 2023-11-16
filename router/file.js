@@ -1,22 +1,44 @@
 const express = require('express');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
 
 const router = express.Router();
 
-module.exports = function() {
-    router.get('/filenumbers', (req, res) => {
-        res.send('I am filenumbers, so what do you want');
+    
+    router.get('/', (req, res) => {
+        res.send('I am file, so what do you want');
     })
 
-    router.post('/filenumbers', () => {
-        res.send('filenumbers created, because I am Post');
+    router.post('/', (req, res) => {
+        // console.log(req.ip);
+        res.send('file created, because I am Post');
     })
+//2 samples from expo docs - /binary-upload
+    // router.patch('/', (req, res) => {
+    //     console.log(req)
+    //     req.pipe(fs.createWriteStream('./uploads/img' + Date.now() + '.png'));
+    //     res.end('OK');
+        
+    // })
 
-    router.patch('/filenumbers/:id', () => {
-        res.send('I will alter a single field, because I am patch');
-    })
+    // /multipart-upload
+    router.patch('/', upload.array('photo'), 
+        (req, res) => {
+            res.removeHeader('OK');
+            console.log(req.files);
+            console.log(req.body)
+            res.send('Fine!')
+        }
+    );
 
-    router.delete('/filenumbers/:id', () => {
+    // router.patch('/:id', (req, res) => {
+    //     res.send('I will alter a single field, because I am patch');
+    // })
+
+    router.delete('/:id', (req, res) => {
         res.send('field is deleted');
     })
-    return router
-}
+    
+    
+    module.exports = router

@@ -1,10 +1,12 @@
 const express = require('express');
-//const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const app = express();
 
+//db
+const db = require('./dbconfig/configDb');
 
-
-//app.use(fileUpload());
+app.use(express.urlencoded({extended: false}))
+// app.use(fileUpload());
 
 const registerRouter = require("./router/register");
 const signInRouter = require("./router/signin");
