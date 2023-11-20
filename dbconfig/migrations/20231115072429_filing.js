@@ -68,9 +68,9 @@ exports.up = async knex => {
 
   await knex.schema.createTable('images', tbl => {
     tbl.increments('id').notNullable();
-    tbl.string('img_url', 255);
+    //tbl.string('img_url', 255);
     tbl.string('img_human_name', 30);
-    tbl.text('img_name');
+    //tbl.text('img_name');
     tbl.string('img_tag');
     tbl.integer('size').notNullable();
     tbl.string('img_path', 80).notNullable();
@@ -86,13 +86,13 @@ exports.up = async knex => {
  * @returns { Promise<void> }
  */
 exports.down = async knex => {
-  await knex.schema.dropTableIfExists('users');
-  await knex.schema.createTable('approvals');
-  await knex.schema.createTable('applications');
-  await knex.schema.createTable('addresses');
-  await knex.schema.createTable('names');
-  await knex.schema.createTable('applic_addresses');
-  await knex.schema.createTable('users');
-  await knex.schema.createTable('files');
-  await knex.schema.createTable('images');
+  await knex.schema.dropTableIfExists('users')
+  // await knex.schema.createTable('approvals');
+  // await knex.schema.createTable('applications');
+  // await knex.schema.createTable('addresses');
+  // await knex.schema.createTable('names');
+  // await knex.schema.createTable('applic_addresses');
+  // await knex.schema.createTable('users');
+  // await knex.schema.createTable('files');
+  // await knex.schema.createTable('images');
 };

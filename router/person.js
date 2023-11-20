@@ -1,28 +1,33 @@
 const express = require('express');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer();
+const db = require('../dbconfig/configDb');
 
 const router = express.Router();
 
-module.exports = function () {
-    router.get('/persons', (req, res) => {
+
+    router.get('/', (req, res) => {
        // console.log(req)
         res.send('I am the James');
     })
 
-    router.get('/persons/:id', (req, res) => {
+    router.get('/:id', (req, res) => {
         res.send('I am the James with id 2');
     })
 
-    router.post('/persons', (req, res) => {
+    router.post('/', upload.none(), (req, res) => {
+        let applicantDet = req.body;
+        console.log(applicantDet);
         res.send('I am the James post');
     })
 
-    router.patch('/persons/:id', (req, res) => {
+    router.patch('/:id', (req, res) => {
         res.send('I am the James patch id');
     })
 
-    router.delete('/persons/:id', (req, res) => {
+    router.delete('/:id', (req, res) => {
         res.send('I am the James delete id');
     })
 
-    return router
-}
+    module.exports = router
