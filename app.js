@@ -11,10 +11,10 @@ app.use(express.urlencoded({extended: false}))
 const registerRouter = require("./router/register");
 const signInRouter = require("./router/signin");
 const personRouter = require('./router/person');
-const categoryRouter = require('./router/category');
+const documentRouter = require('./router/docs');
 const branchRouter = require('./router/branch');
 const fileRouter = require('./router/file');
-const categoryOne = require('./router/categoryone');
+const documentOne = require('./router/documentone');
 // const branchRouter = require("./router/branch")
 
 const port = process.env.PORT || 3000;
@@ -23,10 +23,10 @@ const port = process.env.PORT || 3000;
 app.use('/api/v1/signin', signInRouter);
 app.use('/api/v1/register', registerRouter);
 app.use('/api/v1/persons', personRouter);
-app.use('/api/v1/category', categoryRouter);
+app.use('/api/v1/documents', documentRouter);
 app.use('/api/v1/branches', branchRouter);
 app.use('/api/v1/files', fileRouter);
-app.use('/api/v1/categoryone', categoryOne);
+app.use('/api/v1/documentone', documentOne);
 //create endpoints for google drive db
 
 //For sql db
@@ -39,22 +39,22 @@ app.use('/api/v1/categoryone', categoryOne);
  *          api/v1/institution/private
  *              /person
  *              /branch
- *              /category
+ *              /document
  *              /filenos
- *              /categoryone
- *              /categorytwo
- *              /categorythree
- *              /category...
+ *              /documentone
+ *              /documenttwo
+ *              /documentthree
+ *              /document...
  *
  *          api/v1/institution/govt
  *              /person
  *              /branch
- *              /category
+ *              /document
  *              /filenos
- *              /categoryone
- *              /categorytwo
- *              /categorythree
- *              /category...
+ *              /documentone
+ *              /documenttwo
+ *              /documentthree
+ *              /document...
  *              ...
  *  get req
  *      api/v1/institution
@@ -63,18 +63,18 @@ app.use('/api/v1/categoryone', categoryOne);
  *              /person/:id
  *              /branch
  *              /branch/:id
- *              /category
- *              /category/:id
+ *              /document
+ *              /document/:id
  *              /filenos
  *              /filenos/:id
- *              /categoryone
- *              /categoryone/:id
- *              /categorytwo
- *              /categorytwo/:id
- *              /categorythree
- *              /categorythree/:id
- *              /category...
- *              /category.../:id
+ *              /documentone
+ *              /documentone/:id
+ *              /documenttwo
+ *              /documenttwo/:id
+ *              /documentthree
+ *              /documentthree/:id
+ *              /document...
+ *              /document.../:id
 
  *
  *          api/v1/institution/public
@@ -82,40 +82,40 @@ app.use('/api/v1/categoryone', categoryOne);
  *              /person/:id
  *              /branch
  *              /branch/:id
- *              /category
- *              /category/:id
+ *              /document
+ *              /document/:id
  *              /filenos
  *              /filenos/:id
- *              /categoryone
- *              /categoryone/:id
- *              /categorytwo
- *              /categorytwo/:id
- *              /categorythree
- *              /categorythree/:id
- *              /category...
- *              /category.../:id
+ *              /documentone
+ *              /documentone/:id
+ *              /documenttwo
+ *              /documenttwo/:id
+ *              /documentthree
+ *              /documentthree/:id
+ *              /document...
+ *              /document.../:id
  *              ...
  * 
  *  patch req & delete request
  *          api/v1/institution/private
  *              /person/:id
  *              /branch/:id
- *              /category/:id
+ *              /document/:id
  *              /filenos/:id
- *              /categoryone/:id
- *              /categorytwo/:id
- *              /categorythree/:id
- *              /category.../:id
+ *              /documentone/:id
+ *              /documenttwo/:id
+ *              /documentthree/:id
+ *              /document.../:id
  * 
  *          api/v1/institution/public
  *              /person/:id
  *              /branch/:id
- *              /category/:id
+ *              /document/:id
  *              /filenos/:id
- *              /categoryone/:id
- *              /categorytwo/:id
- *              /categorythree/:id
- *              /category.../:id
+ *              /documentone/:id
+ *              /documenttwo/:id
+ *              /documentthree/:id
+ *              /document.../:id
  * *******
  * Admin Endpoint
  * 
