@@ -14,3 +14,8 @@ web-build/
 
 # local env files
 .env*.local
+
+#my local files
+.db
+dbconfig/**/*
+uploads/*

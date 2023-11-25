@@ -6,53 +6,50 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'pg',
     connection: {
-      filename: './dbconfig/archiving.db'
-      // filename: './dev.sqlite3'
-    },
-  
-    migrations: {
-      directory: './dbconfig/migrations'
-    },
-
-    seeds: {
-      directory: './dbconfig/seeds'
-    },
-    useNullAsDefault: true,
+      host : '127.0.0.1',
+      database : 'archiving',
+      user :     'username',
+      password : 'password',
+      charset : 'utf8' 
+    }
   },
 
+  staging: {
+    client: 'pg',
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {rejectUnauthorized: false},
+      host: process.env.DATABASE_HOST,
+      port: process.env.PORT || 5432,
+      database: process.env.DATABASE_DB,
+      user:     process.env.DATABASE_USER,
+      password: process.env.DATABASE_PW
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  },
 
-  // staging: {
-  //   client: 'postgresql',
-  //   connection: {
-  //     database: 'my_db',
-  //     user:     'username',
-  //     password: 'password'
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // },
-
-  // production: {
-  //   client: 'postgresql',
-  //   connection: {
-  //     database: 'my_db',
-  //     user:     'username',
-  //     password: 'password'
-  //   },
-  //   pool: {
-  //     min: 2,
-  //     max: 10
-  //   },
-  //   migrations: {
-  //     tableName: 'knex_migrations'
-  //   }
-  // }
+  production: {
+    client: 'postgresql',
+    connection: {
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  }
 
 };
