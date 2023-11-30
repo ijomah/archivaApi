@@ -25,6 +25,9 @@ const router = express.Router();
         // const imgs = db('images');
         // console.log('img', imgs);
         const itm = req.params.file
+        if (!itm) {
+            return res.status(404).send('No such file');
+        }
         console.log(path.join(__dirname+`/upload/${itm}`))
         res.sendFile(path.join(__dirname+`/upload/${itm}`))
         res.send('I am file, so what do you want');
@@ -34,7 +37,20 @@ const router = express.Router();
     router.get('/filedetails', (req, res) => {
         const det = req.body;
         // console.log( db.from('files').select('*') );
-        console.log(db('images'))
+        // console.log(db('images'))
+        // db('login').then(console.log)
+        // console.log(db.select('*').from('login').then(console.log))
+        res.send('testing...')
+    })
+
+    router.get('/filedetails/:fileNO', (req, res) => {
+        const singleDet = req.params;
+        if(!singleDet) {
+            res.status(404).send('No such file');
+        }
+        // console.log( db.from('files').select('*') );
+        // console.log(db('images'))
+        db('login').then(console.log)
         // console.log(knex.select('*').from('images'))
         res.send('testing...')
     })

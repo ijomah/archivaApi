@@ -1,4 +1,6 @@
-const knexConfig = require("./../configDb");
+// const knexConfig = require("./../configDb");
+
+const { trace } = require("../../app");
 
 /**
  * @param { import("knex").Knex } knex
@@ -21,6 +23,8 @@ exports.up = async knex => {
     tbl.text('file_name');
     tbl.string('file_no', 20)
     tbl.text('file_type');
+    tbl.string('file_yr');
+    tbl.string('file_tag');
     tbl.dateTime('created_at');
     tbl.integer('user_id');
     tbl.integer('applic_id');
@@ -56,8 +60,16 @@ exports.up = async knex => {
     tbl.integer('house_no', 10);
     tbl.string('street_name');
     tbl.text('state', 15);
+    tbl.string('country');
+    tbl.integer('country_code');
   });
 
+  await knex.schema.createTable('phones', tbl => {
+    tbl.increments('id', {primaryKey: true}).notNullable();
+    tbl.integer('phone_no');
+    // tbl.string('phone_make')
+    
+  });
   await knex.schema.createTable('approvals', tbl => {
     tbl.integer('id', {primaryKey: true}).notNullable();
     tbl.string('approv_type');
