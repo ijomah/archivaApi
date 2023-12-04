@@ -95,7 +95,7 @@ const router = express.Router();
                 }, 'id')
                 
                 userId = await tx('users').insert({
-                    // user_key: regData.userKey,
+                    // user_key: bodyData.userKey,
                     date_created: new Date(),
                     // login_id: 
                 }, 'id')
@@ -155,50 +155,63 @@ const router = express.Router();
     router.patch('/', upload.array('photo'), 
         async (req, res) => {
             res.removeHeader('OK');
-            console.log(req.files);
-            // const bodyData = req.body.data;
-            // console.log(req.body);
-            // console.log('bodydata to str', bodyData)
+            const bodyData = req.body.data;
             try {
                 const  imgArr = req.files;
                 let fileIds = [];
-                // await db.transaction(async (tx) => {
-                //     const apprIds = await tx('approvals').insert({
-                //         approv_type: bodyData.approvalType,
-                //         approv_date: bodyData.approvalDate,
-                //         approv_do: bodyData.approvalDo,
-                //         dcb_no: bodyData.dcbNumber
-                //     }, 'id')
+                await db.transaction(async (tx) => {
+                    const apprIds = await tx('approvals').insert({
+                        approv_type: bodyData.approvalType,
+                        approv_date: bodyData.approvalDate,
+                        approv_do: bodyData.approvalDo,
+                        dcb_no: bodyData.dcbNumber
+                    }, 'id')
+//not needed. I just need the user_id to be in the
+//needed tables
+                    // const userIds = await tx('users').insert({
+                    //     user_key: bodyData.userKey,
+                    //     date_created: new Date(),
+                    //     // login_id: 
+                    // }, 'id')
 
-                //     const applIds = await tx('applications').insert({
-                //         applic_tag: bodyData.applicTag,
-                //         applic_no: bodyData.applicationNumber,
-                //         applic_dob: bodyData.fileYear,
-                //         approv_id: apprIds[0].id
-                //     }, 'id')
+                    const applIds = await tx('applications').insert({
+                        applic_tag: bodyData.applicTag,
+                        applic_no: bodyData.applicationNumber,
+                        applic_dob: bodyData.fileYear,
+                        approv_id: apprIds[0].id,
+                        // user_id: bodyData.dbUserId
+                    }, 'id')
     
-                //     const nameId = await tx('names').insert({
-                //         f_name: bodyData.fname,
-                //         l_name: bodyData.lname,
-                //         applic_id: applIds[0].id
-                //     }, 'id')
+                    const nameId = await tx('names').insert({
+                        f_name: bodyData.fname,
+                        l_name: bodyData.lname,
+                        applic_id: applIds[0].id
+                    }, 'id')
                     
-                //     const userIds = await tx('users').insert({
-                //         // user_key: regData.userKey,
-                //         date_created: new Date(),
-                //         // login_id: 
-                //     }, 'id')
+                    const fileIds = await tx('files').insert({
+                        file_name: bodyData.docTitle,
+                        file_no: bodyData.value,
+                        file_type: bodyData.value,
+                        // user_id: bodyData.dbUserId,
+                        applic_id: applIds[0].id,
+                        date_created: bodyData.fileYear
+                    }, 'id')
 
-                //     const fileIds = await tx('files').insert({
-                //         file_name: bodyData.docTitle,
-                //         file_no: bodyData.value,
-                //         file_type: bodyData.value,
-                //         user_id: bodyData.dbUserId,
-                //         applic_id: applIds[0].id,
-                //         date_created: bodyData.fileYear
-                //     }, 'id')
-                //     // console.log('ids', applIds[0].id, apprIds[0], fileIds);
-                //})
+                    const addressIds = await tx('addresses').insert({
+                        house_no: bodyData.houseNo,
+                        street_name: bodyData.streetName,
+                        area_name: bodyData.areaName,
+                        state: bodyData.state,
+                        // user_id: bodyData.dbUserId
+                    }, 'id')
+                    // console.log('ids', applIds[0].id, apprIds[0], fileIds);
+                })
+
+                const countryId = await tx('countries').insert({
+                    zip_code: bodyData.zipCode,
+                    country_name: bodyData.country,
+                    address_id: addressId[0].id
+                }, 'id')
                 
                 imgArr.forEach(async (datum) => {
                     await db.transaction(async (tx) => {

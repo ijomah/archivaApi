@@ -23,11 +23,19 @@ const regUser = async (req, res) => {
                 hash: regData.password,
                 email: regData.email
             }, 'id')
+
+            const userId = await tx('users').insert({
+                user_key: regData.userKey,
+                date_created: regData.fileYear,
+                login_id: loginId[0].id
+            }, 'id')
+
             const addressId = await tx('addresses').insert({
                 house_no: regData.houseNo,
                 street_name: regData.streetName,
                 area_name: regData.areaName,
-                state: regData.state
+                state: regData.state,
+                user_id: userId[0].id
             }, 'id');
 
             const countryId = await tx('countries').insert({
@@ -39,12 +47,6 @@ const regUser = async (req, res) => {
             const nameId = await tx('names').insert({
                 f_name: regData.fname,
                 l_name: regData.lname,           
-            }, 'id')
-            
-            const userId = await tx('users').insert({
-                user_key: regData.userKey,
-                date_created: regData.fileYear,
-                login_id: loginId[0].id
             }, 'id')
 
             const phoneId = await tx('phone').insert({
