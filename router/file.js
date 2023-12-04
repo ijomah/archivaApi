@@ -19,6 +19,7 @@ const router = express.Router();
         res.download(`./uploads/${itm}`)
         // res.send('I am file, so what do you want');
     })
+    // uploads/1a129f446b45199464331c465a0bc47f
 // img1700317933741.png
     //For sendfile for preview without download
     router.get('/filesview/:file', (req, res) => {
@@ -33,14 +34,30 @@ const router = express.Router();
         res.send('I am file, so what do you want');
     })
 
+    router.get('/:fileId', (req, res) => {
+        const idForFile = req.params.fileId;
+        db.from('images').select(
+            'mime_type',
+            'img_name',
+            'img_tag',
+            'img_human_name'
+        )
+        .where({id: idForFile})
+        .then(imgDatum => res.status(200).send(imgDatum))
+    })
+
     //let this serve dashboard request
     router.get('/filedetails', (req, res) => {
         const det = req.body;
+    // process.env.MINE='is you'
         // console.log( db.from('files').select('*') );
-        // console.log(db('images'))
+        // console.log(process.env)
         // db('login').then(console.log)
-        // console.log(db.select('*').from('login').then(console.log))
-        res.send('testing...')
+        db.select('*').from('countries')
+        .then(data => {
+            return res.status(200).send(data)
+        })
+        // res.status(200).send('testing...')
     })
 
     router.get('/filedetails/:fileNO', (req, res) => {
@@ -50,42 +67,82 @@ const router = express.Router();
         }
         // console.log( db.from('files').select('*') );
         // console.log(db('images'))
-        db('login').then(console.log)
+        db('login').then(tins => res.status(200).send(tins))
         // console.log(knex.select('*').from('images'))
-        res.send('testing...')
+        
     })
 
-    router.post('/', upload.none(), (req, res) => {
+    router.post('/', upload.none(), async (req, res) => {
         // console.log(req.files);
-        console.log(req.body);
-        const bodyData = req.body
-        db('applications').insert({
-            applic_tag: bodyData.applicTag,
-            applic_no: bodyData.applicationNumber,
-            applic_name: bodyData.applicationName,
-            // applic_name: bodyData.
+        // console.log(req.body);
+        let fileId=[];
+        let nameId=[];
+        let applId=[];
+        let apprId=[];
+        let userId=[];
+        try{
+            const bodyData = req.body
+            // db.transaction()
+           await db.transaction(async (tx) =>{
 
-        })
-        .then(() => {
-            res.send('inserted well')
-        })
-        .catch((error) => console.log('err inserting', error))
+    //Please do insert for users table first 
+    //bcos you need the id as foreign key in files table below
+                apprId = await tx('approvals').insert({
+                    approv_type: bodyData.approvalType,
+                    approv_date: bodyData.approvalDate,
+                    approv_do: bodyData.approvalDo,
+                    dcb_no: bodyData.dcbNumber
+                }, 'id')
+                
+                userId = await tx('users').insert({
+                    // user_key: regData.userKey,
+                    date_created: new Date(),
+                    // login_id: 
+                }, 'id')
 
-        db('approvals').insert({
-            approv_type: bodyData.approvalType,
-            created_at: bodyData.approvalDate,
-            approv_do: bodyData.approvalDo,
-            dcb_no: bodyData.dcbNumber
-        })
+                applId = await tx('applications').insert({
+                    applic_tag: bodyData.applicTag,
+                    applic_no: bodyData.applicationNumber,
+                    applic_dob: bodyData.fileYear,
+                    approv_id: apprId[0].id,
+                    // Whenever err on this is thrown, fix
+                    // in the db. Just adopted newly
+                    user_id: userId[0].id
+                }, 'id')
 
-        db('files').insert({
-            file_name: bodyData.docTitle,
-            file_no: bodyData.value,
-            file_type: bodyData.value,
-            created_at: bodyData.fileYear
-        })
-        res.send('file created, because I am Post');
+                nameId = await tx('names').insert({
+                    f_name: bodyData.fname,
+                    l_name: bodyData.lname,
+                    applic_id: applId[0].id
+                }, 'id')
+
+                fileId = await tx('files').insert({
+                    file_name: bodyData.docTitle,
+                    file_no: bodyData.value,
+                    file_type: bodyData.value,
+                    user_id: bodyData.dbUserId,
+                    applic_id: applId[0].id,
+                    date_created: bodyData.fileYear
+                }, 'id')
+                // console.log('ids', applIds[0].id, apprIds[0], fileIds);
+            })
+            
+            return res.status(201).send({
+                message: 'Inserted successfully',
+                ids: {
+                    fileId: fileId[0],
+                    nameId: nameId[0],
+                    applId: applId[0],
+                    apprId: apprId[0],
+                    userId: userId[0]
+                }
+            });
+        } catch(error) {
+            console.log('catch err: ', error)
+        }
+        // catch((error) => console.log('catch err: ', error)) 
     })
+    
 //2 samples from expo docs - /binary-upload
     // router.patch('/:id', (req, res) => {
     //     console.log(req.params)
@@ -96,52 +153,102 @@ const router = express.Router();
 
     // /multipart-upload
     router.patch('/', upload.array('photo'), 
-        (req, res) => {
+        async (req, res) => {
             res.removeHeader('OK');
             console.log(req.files);
-            const bodyData = JSON.parse(req.body.data);
+            // const bodyData = req.body.data;
             // console.log(req.body);
-            console.log('bodydata to str', bodyData)
-            let  imgArr = req.files;
-            imgArr.forEach((datum) => {
-                console.log('datum', datum)
-                db('images').insert({
-                    img_human_name: datum.originalname,
-                    img_tag: req.body.imgId,
-                    size: datum.size,
-                    img_path: datum.path,
-                    mime_type: datum.mimetype,
-                    // file_id: req.body.imgId.slice(2)
-                })
-            })
+            // console.log('bodydata to str', bodyData)
+            try {
+                const  imgArr = req.files;
+                let fileIds = [];
+                // await db.transaction(async (tx) => {
+                //     const apprIds = await tx('approvals').insert({
+                //         approv_type: bodyData.approvalType,
+                //         approv_date: bodyData.approvalDate,
+                //         approv_do: bodyData.approvalDo,
+                //         dcb_no: bodyData.dcbNumber
+                //     }, 'id')
 
+                //     const applIds = await tx('applications').insert({
+                //         applic_tag: bodyData.applicTag,
+                //         applic_no: bodyData.applicationNumber,
+                //         applic_dob: bodyData.fileYear,
+                //         approv_id: apprIds[0].id
+                //     }, 'id')
+    
+                //     const nameId = await tx('names').insert({
+                //         f_name: bodyData.fname,
+                //         l_name: bodyData.lname,
+                //         applic_id: applIds[0].id
+                //     }, 'id')
+                    
+                //     const userIds = await tx('users').insert({
+                //         // user_key: regData.userKey,
+                //         date_created: new Date(),
+                //         // login_id: 
+                //     }, 'id')
+
+                //     const fileIds = await tx('files').insert({
+                //         file_name: bodyData.docTitle,
+                //         file_no: bodyData.value,
+                //         file_type: bodyData.value,
+                //         user_id: bodyData.dbUserId,
+                //         applic_id: applIds[0].id,
+                //         date_created: bodyData.fileYear
+                //     }, 'id')
+                //     // console.log('ids', applIds[0].id, apprIds[0], fileIds);
+                //})
+                
+                imgArr.forEach(async (datum) => {
+                    await db.transaction(async (tx) => {
+                            // console.log(datum)
+                            var imageId = await tx('images').insert({        
+                                img_human_name: datum.originalname,
+                                img_tag: req.body.imgId,
+                                size: datum.size,
+                                img_name: datum.filename,
+                                file_id: fileIds[0].id,
+                                img_path: datum.path,
+                                mime_type: datum.mimetype
+                        }, 'id')
+                        return res.status(200).send(imageId)      
+                    })  
+                })
+                return res.status(201).send('file inserted');
+                
+            } catch(error) {
+                console.log('new err', error)
+            }
+            
+            
             // docData.phoneNo,
             //             docData.value,
             //             docData.fname,
             //             docData.fileYear
 
-            db('applications').insert({
-                applic_tag: bodyData.applicTag,
-                applic_no: bodyData.applicationNumber,
-                applic_name: bodyData.applicationName,
-                // applic_name: bodyData.
+            // db('applications').insert({
+            //     applic_tag: bodyData.applicTag,
+            //     applic_no: bodyData.applicationNumber,
+            //     applic_name: bodyData.applicationName,
+            //     // applic_name: bodyData.
 
-            })
+            // })
 
-            db('approvals').insert({
-                approv_type: bodyData.approvalType,
-                created_at: bodyData.approvalDate,
-                approv_do: bodyData.approvalDo,
-                dcb_no: bodyData.dcbNumber
-            })
+            // db('approvals').insert({
+            //     approv_type: bodyData.approvalType,
+            //     created_at: bodyData.approvalDate,
+            //     approv_do: bodyData.approvalDo,
+            //     dcb_no: bodyData.dcbNumber
+            // })
 
-            db('files').insert({
-                file_name: bodyData.docTitle,
-                file_no: bodyData.value,
-                file_type: bodyData.value.slice(2,3),
-                created_at: bodyData.fileYear
-            })
-            res.send('Fine!');
+            // db('files').insert({
+            //     file_name: bodyData.docTitle,
+            //     file_no: bodyData.value,
+            //     file_type: bodyData.value.slice(2,3),
+            //     created_at: bodyData.fileYear
+            // })
+            return res.status(200).send('Fine!');
         }
     );
 
