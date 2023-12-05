@@ -193,7 +193,7 @@ const router = express.Router();
                         applic_id: applIds[0].id
                     }, 'id')
                     
-                    const fileIds = await tx('files').insert({
+                    fileIds = await tx('files').insert({
                         file_name: bodyData.docTitle,
                         file_no: bodyData.value,
                         file_type: bodyData.value,
@@ -210,14 +210,15 @@ const router = express.Router();
                         // user_id: bodyData.dbUserId
                     }, 'id')
                     // console.log('ids', applIds[0].id, apprIds[0], fileIds);
-                })
 
-                const countryId = await tx('countries').insert({
-                    zip_code: bodyData.zipCode,
-                    country_name: bodyData.country,
-                    address_id: addressId[0].id
-                }, 'id')
-                
+                    const countryId = await tx('countries').insert({
+                        zip_code: bodyData.zipCode,
+                        country_name: bodyData.country,
+                        address_id: addressIds[0].id
+                    }, 'id')
+
+                });
+
                 imgArr.forEach(async (datum) => {
                     await db.transaction(async (tx) => {
                             // console.log(datum)
@@ -230,10 +231,14 @@ const router = express.Router();
                                 img_path: datum.path,
                                 mime_type: datum.mimetype
                         }, 'id')
-                        return res.status(200).send(imageId)      
+                        // return res.status(200).send(imageId)      
                     })  
                 })
-                return res.status(201).send('file inserted');
+
+                
+                
+                
+                return res.status(200).send('file inserted');
                 
             } catch(error) {
                 console.log('new err', error)
