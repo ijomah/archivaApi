@@ -159,8 +159,8 @@ const router = express.Router();
             const bodyData = JSON.parse(req.body.data);
             const  imgArr = req.files;
 
-            console.log(bodyData)
-            console.log(req.files)
+            // console.log(bodyData)
+            // console.log(req.files)
             try {
                 
                 let fileIds = [];
