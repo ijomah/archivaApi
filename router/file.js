@@ -155,9 +155,14 @@ const router = express.Router();
     router.patch('/', upload.array('photo'), 
         async (req, res) => {
             res.removeHeader('OK');
-            const bodyData = req.body.data;
+            
+            const bodyData = JSON.parse(req.body.data);
+            const  imgArr = req.files;
+
+            console.log(bodyData)
+            console.log(req.files)
             try {
-                const  imgArr = req.files;
+                
                 let fileIds = [];
                 await db.transaction(async (tx) => {
                     const apprIds = await tx('approvals').insert({

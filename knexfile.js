@@ -5,19 +5,19 @@
  */
 module.exports = {
 
-  // development: {
-  //   client: 'pg',
-  //   connection: {
-  //     host : '127.0.0.1',
-  //     database : 'postgres',
-  //     user :     'postgres',
-  //     password : 'digits1985',
-  //     charset : 'utf8' 
-  //   },
-  //   migrations: {
-  //     directory: './dbconfig/migration'
-  //   }
-  // },
+  development: {
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      database : 'postgres',
+      user :     'postgres',
+      password : 'digits1985',
+      charset : 'utf8' 
+    },
+    migrations: {
+      directory: './dbconfig/migration'
+    }
+  },
 
   staging: {
     client: 'pg',
