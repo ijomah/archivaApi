@@ -188,8 +188,8 @@ const router = express.Router();
                     }, 'id')
     
                     const nameId = await tx('names').insert({
-                        f_name: bodyData.fname,
-                        l_name: bodyData.lname,
+                        f_name: bodyData.fName,
+                        l_name: bodyData.lName,
                         applic_id: applIds[0].id
                     }, 'id')
                     
