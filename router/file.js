@@ -184,7 +184,7 @@ const router = express.Router();
                         applic_no: bodyData.applicationNumber,
                         applic_dob: bodyData.fileYear,
                         approv_id: apprIds[0].id,
-                        // user_id: bodyData.dbUserId
+                        user_id: bodyData.dbUserId
                     }, 'id')
     
                     const nameId = await tx('names').insert({
@@ -197,7 +197,7 @@ const router = express.Router();
                         file_name: bodyData.docTitle,
                         file_no: bodyData.value,
                         file_type: bodyData.value,
-                        // user_id: bodyData.dbUserId,
+                        user_id: bodyData.dbUserId,
                         applic_id: applIds[0].id,
                         date_created: bodyData.fileYear
                     }, 'id')
@@ -207,7 +207,7 @@ const router = express.Router();
                         street_name: bodyData.streetName,
                         area_name: bodyData.areaName,
                         state: bodyData.state,
-                        // user_id: bodyData.dbUserId
+                        user_id: bodyData.dbUserId
                     }, 'id')
                     // console.log('ids', applIds[0].id, apprIds[0], fileIds);
 
