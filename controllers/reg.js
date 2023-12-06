@@ -8,7 +8,7 @@ const getUser = (req, res) => {
 
 const regUser = async (req, res) => {
     //get the req.body content
-    
+    const regData = JSON.parse(req.body);
     // console.log('from con', regData);
     // console.log(db('admins'));
     // console.log(db('admins').select().table('admins'))
@@ -16,7 +16,7 @@ const regUser = async (req, res) => {
 
     // const hash = await hashPassword()
     try {
-        const regData = req.body;
+        
         await db.transaction(async tx =>{
             // login table insertion
             const loginId = await tx('login').insert({
