@@ -6,6 +6,7 @@ const app = express();
 const db = require('./dbconfig/configDb');
 
 app.use(express.urlencoded({extended: false}))
+
 // app.use(fileUpload());
 
 const registerRouter = require("./router/register");

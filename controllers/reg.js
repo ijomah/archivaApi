@@ -1,5 +1,6 @@
 const db = require("../dbconfig/configDb");
 
+
 const getUser = (req, res) => {
     // db.select().table('users').then(admin => console.log(admin));
     db('files').then(admin => res.send(admin));
@@ -8,7 +9,8 @@ const getUser = (req, res) => {
 
 const regUser = async (req, res) => {
     //get the req.body content
-    const regData = JSON.parse(req.body);
+    
+    const regData = req.body;
     // console.log('from con', regData);
     // console.log(db('admins'));
     // console.log(db('admins').select().table('admins'))
