@@ -11,7 +11,7 @@ const regUser = async (req, res) => {
     //get the req.body content
     
     const regData = req.body;
-    // console.log('from con', regData);
+    console.log('from con', regData);
     // console.log(db('admins'));
     // console.log(db('admins').select().table('admins'))
     // db.insert()

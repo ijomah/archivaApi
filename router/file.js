@@ -13,7 +13,7 @@ const router = express.Router();
     router.get('/filessave/:file', (req, res) => {
         // const imgs = db('images');
         // console.log('img', imgs);
-        console.log(req.params)
+        console.log('para', req.params)
         const itm = req.params.file
         // ./uploads/3fd3f300ba4df49acdaf00af77be896e
         res.download(`./uploads/${itm}`)
