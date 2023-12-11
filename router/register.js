@@ -5,7 +5,12 @@ const router = express.Router();
 // const upload = multer();
 router.use(express.json())
 // const db = require("../dbconfig/configDb");
-const { getUser, regUser, updateRegister, deleteRegEntry } = require('../controllers/reg');
+const { 
+    getUser, 
+    regUser, 
+    updateRegister, 
+    deleteRegEntry 
+} = require('../controllers/reg');
 
 
     router

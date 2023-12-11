@@ -5,28 +5,32 @@ const router = express.Router();
 //In use
 router.get('/:userID', (req, res) => {
        const userDbNo = req.params.userID
-    db.from('applications').select(
-        'users.date_created',
-        'user_key',
-        'applic_dob',
-        'applic_tag',
-        'f_name',
-        'l_name',
-        'file_name',
-        'file_no',
-        'files.id',
-        'dcb_no',
-        'approv_do',
-        'approv_date',
-        'approv_type',
-    )
-    .join('files', 'applications.id', '=', 'files.applic_id')
-    .join('names', 'applications.id', '=', 'names.applic_id')
-    .join('approvals', 'approvals.id', '=', 'applications.approv_id')
-    .join('users', 'users.id', '=', db.raw('?', [`${userDbNo}`]))
-    .then(info => {
-        return res.status(200).send(info)
-    })
+    if(userDbNo === 'undefined') {
+        db.from('applications').select(
+            'users.date_created',
+            'user_key',
+            'applic_dob',
+            'applic_tag',
+            'f_name',
+            'l_name',
+            'file_name',
+            'file_no',
+            'files.id',
+            'dcb_no',
+            'approv_do',
+            'approv_date',
+            'approv_type',
+        )
+        .join('files', 'applications.id', '=', 'files.applic_id')
+        .join('names', 'applications.id', '=', 'names.applic_id')
+        .join('approvals', 'approvals.id', '=', 'applications.approv_id')
+        .join('users', 'users.id', '=', db.raw('?', [`${userDbNo}`]))
+        .then(info => {
+            return res.status(200).send(info)
+        })
+    } else {
+        return res.status(201).send('Client error: Fix your params');
+    }
 })
 
 // not in use
