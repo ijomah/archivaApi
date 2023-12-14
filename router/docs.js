@@ -21,10 +21,15 @@ router.get('/:userID', (req, res) => {
             'approv_do',
             'approv_date',
             'approv_type',
+            // 'house_no',
+            // 'street_name',
+			// 'area_name',
+            // 'state'
         )
         .join('files', 'applications.id', '=', 'files.applic_id')
         .join('names', 'applications.id', '=', 'names.applic_id')
         .join('approvals', 'approvals.id', '=', 'applications.approv_id')
+        // .join('addresses', 'addresses.id', '=', 'addresses.user_id')
         .join('users', 'users.id', '=', db.raw('?', [`${userDbNo}`]))
         .then(info => {
             return res.status(200).send(info)
