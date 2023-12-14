@@ -5,12 +5,13 @@ const router = express.Router();
 //In use
 router.get('/:userID', (req, res) => {
        const userDbNo = req.params.userID
-    if(userDbNo === 'undefined') {
+    if(userDbNo != 'undefined') {
         db.from('applications').select(
             'users.date_created',
             'user_key',
             'applic_dob',
             'applic_tag',
+            'applic_no',
             'f_name',
             'l_name',
             'file_name',
@@ -40,6 +41,7 @@ router.get('/', (req, res) => {
      'user_key',
      'applic_dob',
      'applic_tag',
+     'applic_no',
      'f_name',
      'l_name',
      'file_name',
