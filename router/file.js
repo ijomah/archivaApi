@@ -15,8 +15,7 @@ const router = express.Router();
         // console.log('para', req.params)
         const itm = req.params.file
         // ./uploads/3fd3f300ba4df49acdaf00af77be896e
-        res.download(path.join(__dirname, `./uploads/${itm}`))
-        // res.send('I am file, so what do you want');
+        res.download(path.join(__dirname, `./uploads/${itm}`))  
     })
     
     // uploads/1a129f446b45199464331c465a0bc47f
@@ -32,7 +31,6 @@ const router = express.Router();
         // console.log('abs', path.join(__dirname+`/upload/${itm}`))
         // console.log('rel', path.join(__dirname, `./upload/${itm}`))
         res.sendFile(path.join(__dirname+`/upload/${itm}`))
-        res.send('I am file, so what do you want');
     })
 
     router.get('/:fileId', (req, res) => {
