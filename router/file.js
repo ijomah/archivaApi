@@ -4,8 +4,7 @@ const path = require('path')
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
 const db = require('../dbconfig/configDb');
-const { default: knex } = require('knex');
-const { error } = require('console');
+
 
 const router = express.Router();
 
@@ -13,12 +12,13 @@ const router = express.Router();
     router.get('/filessave/:file', (req, res) => {
         // const imgs = db('images');
         // console.log('img', imgs);
-        console.log('para', req.params)
+        // console.log('para', req.params)
         const itm = req.params.file
         // ./uploads/3fd3f300ba4df49acdaf00af77be896e
-        res.download(`./uploads/${itm}`)
+        res.download(path.join(__dirname, `./uploads/${itm}`))
         // res.send('I am file, so what do you want');
     })
+    
     // uploads/1a129f446b45199464331c465a0bc47f
 // img1700317933741.png
     //For sendfile for preview without download
@@ -29,7 +29,8 @@ const router = express.Router();
         if (!itm) {
             return res.status(404).send('No such file');
         }
-        console.log(path.join(__dirname+`/upload/${itm}`))
+        // console.log('abs', path.join(__dirname+`/upload/${itm}`))
+        // console.log('rel', path.join(__dirname, `./upload/${itm}`))
         res.sendFile(path.join(__dirname+`/upload/${itm}`))
         res.send('I am file, so what do you want');
     })

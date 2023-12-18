@@ -13,9 +13,7 @@ const regUser = async (req, res) => {
     const regData = req.body;
     console.log('from con', regData);
     // console.log(db('admins'));
-    // console.log(db('admins').select().table('admins'))
-    // db.insert()
-
+    
     // const hash = await hashPassword()
     try {
         
